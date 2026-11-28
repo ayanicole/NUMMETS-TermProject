@@ -203,6 +203,14 @@ function test_model()
     P = parameters();
     g = build_grid(P);
     [A, b, nd] = assemble_system(P, g);
+    % 6b. Textbook benchmark: Chapra & Canale Example 29.3 (heated plate, insulated lower edge)
+    Pb = base_params();  Pb.Lx = 0.4;  Pb.Ly = 0.4;  Pb.Nx = 5;  Pb.Ny = 5;  Pb.q = 0;
+    Pb.bc.W = struct('type', 'dirichlet', 'value', 75);   Pb.bc.E = struct('type', 'dirichlet', 'value', 50);
+    Pb.bc.N = struct('type', 'dirichlet', 'value', 100);  Pb.bc.S = struct('type', 'insulated');
+    gb = build_grid(Pb);  [Ab, bb] = assemble_system(Pb, gb);  Mb = reshape(Ab\bb, 5, 5).';   % Mb(j,i), j = 1 is the lower edge
+    Tbook = [71.91 67.01 59.54; 72.81 68.31 60.57; 76.01 72.84 64.42; 83.41 82.63 74.26];     % rows j = 0..3, columns i = 1..3
+    ok = rep('textbook: Example 29.3 insulated-edge plate reproduced', max(max(abs(Mb(1:4, 2:4) - Tbook))) < 0.01, ...
+             sprintf('(max diff %.3f K from the printed values)', max(max(abs(Mb(1:4, 2:4) - Tbook))))) && ok;
     ok = rep('defaults: sizes', size(A, 1) == 441 && numel(b) == 441, '') && ok;
     ok = rep('defaults: south edge Dirichlet at Thot', all(nd.type(g.idx(1, :)) == 1) && all(b(g.idx(1, :)) == P.Thot), '') && ok;
     ok = rep('defaults: W/E/N edge nodes radiate', all(nd.type(g.idx(2:end, 1)) == 2) && all(nd.type(g.idx(2:end, end)) == 2) ...
