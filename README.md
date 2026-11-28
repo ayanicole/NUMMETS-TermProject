@@ -3,7 +3,7 @@ This is our group's workspace for the MATLAB code, figures, and IEEE paper. Ever
 
 ## Model Lead modules (grid, assembly, heat flow, interpolation)
 
-Run `test_model` from the repo folder. The last line should read `ALL CHECKS PASSED` (28 checks, tested in GNU Octave 10.3).
+Run `test_model` from the repo folder. The last line should read `ALL CHECKS PASSED` (29 checks, tested in GNU Octave 10.3).
 
 | File | What it does |
 |---|---|
@@ -14,7 +14,7 @@ Run `test_model` from the repo folder. The last line should read `ALL CHECKS PAS
 | `make_source.m` | Uniform, rectangular or Gaussian heat source with exact total power. Always build sources with this. |
 | `material_k.m` | Newton divided-difference k(T) for copper and aluminum. |
 | `interp_field.m` | Lagrange interpolation of the temperature field. |
-| `test_model.m` | The 28 checks. |
+| `test_model.m` | The 29 checks, including a benchmark against Example 29.3 of Chapra & Canale, Numerical Methods for Engineers, 7th ed. |
 
 **Full nonlinear system:** `F(T) = A*T - b + nodes.rho.*(T.^4 - Tamb^4) = 0`.
 
